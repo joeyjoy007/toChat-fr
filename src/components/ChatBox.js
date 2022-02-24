@@ -21,7 +21,7 @@ const {selectedChat}=ChatState()
    borderRadius="lg"
    borderWidth="1px"
    >
-   <SingleChat fetchAgain={fetchAgain} setFetchChat={setFetchAgain}/>
+   <SingleChat fetchAgain={fetchAgain} setFetchAgain={setFetchAgain}/>
    </Box>
   )
 }
