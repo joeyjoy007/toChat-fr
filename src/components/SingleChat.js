@@ -15,7 +15,7 @@ var socket,selectedChatCompare
 const SingleChat = ({ fetchAgain , setFetchAgain }) => {
 
   const toast = useToast()
-  const { user, selectedChat, setSelectedChat } = ChatState();
+  const { user, selectedChat, setSelectedChat , notifications,setNotifications } = ChatState();
 
   const [message, setMessage] = useState([])
   const [newMessage, setNewMessage] = useState("")
@@ -63,7 +63,7 @@ const SingleChat = ({ fetchAgain , setFetchAgain }) => {
           chatId:selectedChat._id
         },config) 
 
-        console.log("DATA",data)
+
         socket.emit("new message",data)
 
         setMessage([...message,data])
@@ -103,7 +103,7 @@ const SingleChat = ({ fetchAgain , setFetchAgain }) => {
       setMessage(data)
      
       setLoading(false)
-      console.log("done")
+   
       socket.emit("join chat",selectedChat._id)
     
       
@@ -135,7 +135,10 @@ const SingleChat = ({ fetchAgain , setFetchAgain }) => {
 
     if(!selectedChatCompare || selectedChatCompare._id !== newMessageReceived.chat._id)
     {
-      // send noification
+      if(!notifications.includes(newMessageReceived)){
+        setNotifications([newMessageReceived,...notifications])
+        setFetchAgain(!fetchAgain)
+      }
     }else{
       setMessage([...message,newMessageReceived])
     }
@@ -143,7 +146,7 @@ const SingleChat = ({ fetchAgain , setFetchAgain }) => {
    })
   },)
   
-  
+  console.log("NOTIFICATION",notifications)
   
   const typingHandler = (e)=>{
       setNewMessage(e.target.value)
