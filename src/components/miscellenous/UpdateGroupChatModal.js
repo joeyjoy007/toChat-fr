@@ -24,7 +24,7 @@ import { ChatState } from "../../context/ChatProvider";
 import UserBadge from "../userAvatar/UserBadge";
 import UserListitem from "../userAvatar/UserListitem";
 
-const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
+const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain,fetchMessage }) => {
   const [groupChatName, setGroupChatName] = useState();
 
   const [search, setSearch] = useState();
@@ -189,6 +189,7 @@ const handelRemove = async(user1)=>{
     user1._id === user._id?setSelectedChat(""):setSelectedChat(data)
 
     setFetchAgain(!fetchAgain)
+    fetchMessage()
     setLoading(false)
   } catch (error) {
     toast({
