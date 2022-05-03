@@ -31,7 +31,7 @@ const GroupChatModal = ({children}) => {
             }
 
             const {data} = await axios.get(`api/user?search=${search}`,config)
-            console.log(data)
+      
             setLoading(false)
             setSearchResult(data)
         } catch (error) {
@@ -119,7 +119,7 @@ const GroupChatModal = ({children}) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
   return (
     <div>
-    <Button onClick={onOpen}>{children}</Button>
+    <span onClick={onOpen}>{children}</span>
     <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>

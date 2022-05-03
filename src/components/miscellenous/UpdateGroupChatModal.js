@@ -2,7 +2,7 @@ import { ViewIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
-  Divider,
+
   FormControl,
   IconButton,
   Input,
@@ -14,7 +14,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Spinner,
-  StatLabel,
+
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -25,7 +25,7 @@ import UserBadge from "../userAvatar/UserBadge";
 import UserListitem from "../userAvatar/UserListitem";
 
 const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain,fetchMessage }) => {
-  const [groupChatName, setGroupChatName] = useState();
+  const [groupChatName, setGroupChatName] = useState("");
 
   const [search, setSearch] = useState();
   const [searchResult, setSearchResult] = useState([]);
@@ -34,43 +34,6 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain,fetchMessage }) => {
 
   const { user, selectedChat, setSelectedChat } = ChatState();
 
-
-  const handleRename = async () => {
-    if (!groupChatName) return;
-
-    try {
-      setRenameLoadin(true);
-      const config = {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      };
-
-      const { data } = await axios.put(
-        "/api/chat/rename",
-        {
-          chatId: selectedChat._id,
-          chatName: groupChatName,
-        },
-        config
-      );
-      console.log(data);
-
-      setSelectedChat(data);
-      setFetchAgain(!fetchAgain);
-      setRenameLoadin(false);
-    } catch (error) {
-      toast({
-        title: "error occured",
-        description: error.message,
-        status: "warning",
-        duration: 4000,
-        isClosable: true,
-      });
-      setRenameLoadin(false);
-      setGroupChatName("");
-    }
-  };
 
   const handelSearch = async (query) => {
     setSearch(query);
@@ -86,7 +49,7 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain,fetchMessage }) => {
       };
 
       const { data } = await axios.get(`/api/user?search=${search}`, config);
-      console.log(data);
+
       setLoading(false);
       setSearchResult(data);
     } catch (error) {
@@ -101,6 +64,57 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain,fetchMessage }) => {
     }
   };
 
+
+
+  const handleRename = async () => {
+    if (!groupChatName) return;
+console.log(1);
+    try {
+      console.log(2)
+      setRenameLoadin(true);
+      console.log(3)
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+      console.log(4)
+
+      const { data } = await axios.put(
+        "/api/chat/rename",
+        {
+          chatId: selectedChat._id,
+          chatName: groupChatName,
+        },
+        config
+      );
+console.log(5)
+if (data.users){
+      setSelectedChat(data)
+}
+      console.log(6)
+      setFetchAgain(!fetchAgain);
+      console.log(7)
+      setRenameLoadin(false);
+
+      
+      console.log(8)
+    
+    } catch (error) {
+      toast({
+        title: "erroring",
+        description: error.message,
+        status: "warning",
+        duration: 4000,
+        isClosable: true,
+      });
+      setRenameLoadin(false);
+     
+    }
+    setGroupChatName("");
+  };
+
+ 
 
 
   const handelAddUser = async(user1)=>{
@@ -249,7 +263,7 @@ const handelRemove = async(user1)=>{
                   colorScheme="teal"
                   ml={1}
                   isLoading={renameLoadin}
-                  onClick={() => handleRename()}
+                  onClick={handleRename}
                 >
                   Update
                 </Button>

@@ -41,6 +41,43 @@ const SingleChat = ({ fetchAgain , setFetchAgain }) => {
 
 
 
+  const fetchMessage = async()=>{
+    if(!selectedChat) return
+
+    try {
+
+      setLoading(true)
+
+      const config = {
+        headers:{
+          "Content-Type":"application/json",
+          Authorization:`Bearer ${user.token}`
+        }
+      }
+
+        setLoading(true)
+      const {data} = await axios.get(`/api/message/${selectedChat._id}`,config)
+
+      setMessage(data)
+     
+      setLoading(false)
+   
+      socket.emit("join chat",selectedChat._id)
+   
+    } catch (error) {
+      toast({
+        title: 'error occured',
+        description: error.message,
+        status: 'warning',
+        duration: 4000,
+        isClosable: true,
+      })
+    
+    }
+  }
+  
+
+
   const sendMessage = async(e)=>{
 
 
@@ -84,44 +121,7 @@ const SingleChat = ({ fetchAgain , setFetchAgain }) => {
 
 
 
-  const fetchMessage = async()=>{
-    if(!selectedChat) return
-
-    try {
-
-      setLoading(true)
-
-      const config = {
-        headers:{
-          "Content-Type":"application/json",
-          Authorization:`Bearer ${user.token}`
-        }
-      }
-
-      const {data} = await axios.get(`/api/message/${selectedChat._id}`,config)
-
-      setMessage(data)
-     
-      setLoading(false)
-   
-      socket.emit("join chat",selectedChat._id)
-    
-      
-
-
-
-    } catch (error) {
-      toast({
-        title: 'error occured',
-        description: error.message,
-        status: 'warning',
-        duration: 4000,
-        isClosable: true,
-      })
-      setLoading(false)
-    }
-  }
-  
+ 
 
   useEffect(() => {
     fetchMessage()
@@ -146,7 +146,7 @@ const SingleChat = ({ fetchAgain , setFetchAgain }) => {
    })
   },)
   
-  console.log("NOTIFICATION",notifications)
+
   
   const typingHandler = (e)=>{
       setNewMessage(e.target.value)
@@ -192,9 +192,10 @@ const SingleChat = ({ fetchAgain , setFetchAgain }) => {
               icon={<ArrowBackIcon />}
               onClick={() => setSelectedChat("")}
             />
-            {!selectedChat.isGroupChat ? (
+            {message &&
+              ( !selectedChat.isGroupChat ? (
               <>
-                {getSender(user, selectedChat.users).toUpperCase()}
+                {getSender(user, selectedChat.users)}
 
                 <ProfileOrder user={getSenderFull(user, selectedChat.users)} />
               </>
@@ -202,13 +203,14 @@ const SingleChat = ({ fetchAgain , setFetchAgain }) => {
                 <>
               {selectedChat.chatName.toUpperCase()}
               <UpdateGroupChatModal
+              fetchMessage = {fetchMessage}
               fetchAgain={fetchAgain}
               setFetchAgain={setFetchAgain}
-              fetchMessage = {fetchMessage}
+            
               />
              
               </>
-            )}
+           ) )}
           </Text>
           <Box
             d="flex"

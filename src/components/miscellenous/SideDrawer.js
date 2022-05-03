@@ -45,7 +45,7 @@ const SideDrawer = () => {
 
   const { user,chat,setSelectedChat,setChat,notifications,setNotifications } = ChatState();
 
-  console.log("NOTIFICATION" , notifications)
+
   const handelSearch = async ()=>{
     if(!search){
       toast({
